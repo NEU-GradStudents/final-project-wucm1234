@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:garagesale2/model/grage_sale_item.dart';
 import 'package:garagesale2/pages/inner_swiper.dart';
 import 'package:garagesale2/service/database_service.dart';
 import 'package:garagesale2/share/scrolling_page.dart';
@@ -23,14 +24,14 @@ class _ItemDetailState extends State<ItemDetail> {
 
   }
 
-  Widget buildPage(String text, Color color) {
-  //Widget buildPage(String url) {
+  //Widget buildPage(String text, Color color) {
+  Widget buildPage(String url) {
     return Padding(
       padding: EdgeInsets.all(12),
       child: Container(
-        color: color,
-        child: Center(child: Text(text, style: TextStyle(fontSize: 42, color: Colors.white),),),
-        //child : Image.network(url),
+        //color: color,
+        //child: Center(child: Text(text, style: TextStyle(fontSize: 42, color: Colors.white),),),
+        child : Image.network(url),
       ),
     );
   }
@@ -39,10 +40,10 @@ class _ItemDetailState extends State<ItemDetail> {
 
   @override
   Widget build(BuildContext context) {
-    int itemId = ModalRoute.of(context).settings.arguments;
+    GarageSaleItem item = ModalRoute.of(context).settings.arguments;
 
 
-    List<String> urls = DatabaseService.getInstance().getUrls(itemId);
+    List<String> urls = item.urls;
 
     print('==========detailurls$urls');
 
@@ -60,7 +61,7 @@ class _ItemDetailState extends State<ItemDetail> {
                 Container(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
-                    'Oeschinen Lake Campground',
+                    item.title,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
@@ -102,40 +103,41 @@ class _ItemDetailState extends State<ItemDetail> {
     Widget textSection = Container(
       padding: const EdgeInsets.all(32),
       child: Text(
-        'Lake Oeschinen lies at the foot of the Blüemlisalp in the Bernese '
-            'Alps. Situated 1,578 meters above sea level, it is one of the '
-            'larger Alpine Lakes. A gondola ride from Kandersteg, followed by a '
-            'half-hour walk through pastures and pine forest, leads you to the '
-            'lake, which warms to 20 degrees Celsius in the summer. Activities '
-            'enjoyed here include rowing, and riding the summer toboggan run.',
+//        'Lake Oeschinen lies at the foot of the Blüemlisalp in the Bernese '
+//            'Alps. Situated 1,578 meters above sea level, it is one of the '
+//            'larger Alpine Lakes. A gondola ride from Kandersteg, followed by a '
+//            'half-hour walk through pastures and pine forest, leads you to the '
+//            'lake, which warms to 20 degrees Celsius in the summer. Activities '
+//            'enjoyed here include rowing, and riding the summer toboggan run.',
+      item.description,
         softWrap: true,
       ),
     );
 
 
-    List<Widget> items = [
-      buildPage("0", Colors.red),
-      buildPage("1", Colors.blue),
-      buildPage("2", Colors.green),
-      buildPage("3", Colors.amber),
-      buildPage("4", Colors.deepPurple),
-      buildPage("5", Colors.teal),
-      buildPage("6", Colors.pink),
-      buildPage("7", Colors.brown)
-    ];
+//    List<Widget> items = [
+//      buildPage("0", Colors.red),
+//      buildPage("1", Colors.blue),
+//      buildPage("2", Colors.green),
+//      buildPage("3", Colors.amber),
+//      buildPage("4", Colors.deepPurple),
+//      buildPage("5", Colors.teal),
+//      buildPage("6", Colors.pink),
+//      buildPage("7", Colors.brown)
+//    ];
     
-//    List<Widget> getImgLists (urls){
-//      print('=========into function getImgLists');
-//      List<Widget> temp = List();
-//      if(urls!= null){
-//        for(String url in urls){
-//          temp.add(buildPage(url));
-//        }
-//      }
-//      print('============temp.length=${temp.length}');
-//      print('============temp.urls=${urls}');
-//      return temp;
-//    }
+    List<Widget> getImgLists (urls){
+      print('=========into function getImgLists');
+      List<Widget> temp = List();
+      if(urls!= null){
+        for(String url in urls){
+          temp.add(buildPage(url));
+        }
+      }
+      print('============temp.length=${temp.length}');
+      print('============temp.urls=${urls}');
+      return temp;
+    }
     
 
     return MaterialApp(
@@ -152,7 +154,7 @@ class _ItemDetailState extends State<ItemDetail> {
               Expanded(
                 child: PageView(
                   //children: getImgLists(urls),
-                  children: items,
+                  children: getImgLists(urls),
                   controller: _controller,
                 ),
               ),
@@ -163,7 +165,7 @@ class _ItemDetailState extends State<ItemDetail> {
                 dotSelectedSize: 8,
                 dotSpacing: 12,
                 controller: _controller,
-                itemCount: items.length,
+                itemCount: urls == null ? 0 : urls.length,
                 orientation: Axis.horizontal,
               ),
 

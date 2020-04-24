@@ -48,7 +48,7 @@ class ItemTile extends StatelessWidget {
               MaterialPageRoute(
                   builder: (context) => ItemDetail(),
                 settings: RouteSettings(
-                  arguments: item.itemId,
+                  arguments: item,
                 ),
               )
           );
